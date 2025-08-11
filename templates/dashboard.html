@@ -1,49 +1,83 @@
 {% extends "base.html" %}
-{% block title %}Dashboard — WebDeploy{% endblock %}
+{% block title %}Dashboard — Deploy X{% endblock %}
 {% block content %}
+
 <style>
+/* Hero */
 header.hero{padding:6rem 0 4rem; position:relative; overflow:hidden}
 .hero-wrap{text-align:center; position:relative; z-index:1}
 .hero-sub{max-width:660px; margin:0 auto 1.8rem; color:var(--text-muted); font-size:1.05rem}
 .btns{display:flex; justify-content:center; align-items:center; gap:.75rem; flex-wrap:wrap; margin-bottom:1.2rem}
+
+/* Projects */
 .section{padding: var(--section) 0}
-.section-title{font-weight:800; font-size:1.35rem; margin:0 0 1.2rem}
+.section-title{text-align:left; font-weight:800; font-size:1.35rem; margin:0 0 1.2rem}
 .grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:1rem}
 .item .head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:.6rem}
+.badge{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; background:var(--surface); border:1px solid var(--border); font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--text); text-decoration:none; word-break:break-all}
+.badge svg{width:16px;height:16px}
+
+/* Features (scroll-snap) */
+.features-title{text-align:center; font-weight:800; font-size:2rem; margin-bottom:2rem}
+.features-scroller{display:grid; grid-auto-flow:column; grid-auto-columns:85%; gap:1rem; overflow-x:auto; padding:.5rem .25rem 1.25rem; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch}
+.feature-card{scroll-snap-align:center; min-height:230px}
+.feature-icon{width:52px;height:52px;border-radius:14px; background:rgba(0,0,0,.06); display:inline-flex; align-items:center; justify-content:center; margin-bottom:.8rem}
+html[data-theme="dark"] .feature-icon{background:rgba(255,255,255,.06)}
+@media(min-width:900px){ .features-scroller{grid-auto-columns:calc(25% - .75rem)} }
+
+/* Accordion (FAQ) */
+.accordion{border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); background:var(--surface); box-shadow:var(--shadow)}
+.accordion-item + .accordion-item{border-top:1px solid var(--border)}
+.accordion-header{cursor:pointer; padding:1rem 1.2rem; display:flex; align-items:center; justify-content:space-between; font-weight:600; user-select:none}
+.accordion-content{max-height:0; overflow:hidden; transition:max-height .3s cubic-bezier(.4,0,.2,1); padding:0 1.2rem}
+.accordion-item.open .accordion-content{padding:0 1.2rem 1rem}
+
+/* Reveal */
 .reveal{opacity:0; transform:translateY(16px); transition: all .55s cubic-bezier(.2,.8,.2,1)}
 .reveal.show{opacity:1; transform:translateY(0)}
 </style>
 
+<!-- HERO -->
 <header class="hero">
   <div class="container hero-wrap">
-    <h1 style="margin:0 0 .6rem; font-weight:800; font-size:clamp(2rem,3vw,3rem)">WebDeploy</h1>
-    <p class="hero-sub">Deploy your Python web apps from GitHub, get a clean URL, and watch live logs.</p>
+    <h1 class="hero-title" style="margin:0 0 .6rem; font-weight:800; font-size:clamp(2rem,3vw,3rem)">Deploy X</h1>
+    <p class="hero-sub">Deploy your Python/Flask apps from GitHub in seconds. Clean URLs, live logs, and simple management.</p>
 
     <div class="btns">
       <a href="{{ url_for('deploy') }}" class="btn">
+        <!-- plus -->
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        New Project
+        Create Project
       </a>
-      <a href="{{ url_for('projects') }}" class="btn btn-ghost">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4-4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-        Manage / Upload
+      <a href="{{ url_for('deploy') }}" class="btn btn-ghost">
+        <!-- sliders / settings -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 21v-7M4 10V3m8 18v-9m0-3V3m8 18v-5m0-5V3"/>
+          <circle cx="4" cy="14" r="2"></circle>
+          <circle cx="12" cy="9" r="2"></circle>
+          <circle cx="20" cy="11" r="2"></circle>
+        </svg>
+        Set Deploy
       </a>
     </div>
-    <div style="color:var(--text-muted);font-size:.85rem">Signed in as <strong>{{ session.get('user') }}</strong></div>
+    <div class="note" style="color:var(--text-muted);font-size:.85rem">Signed in as <strong>{{ session.get('user') }}</strong></div>
   </div>
 </header>
 
+<!-- PROJECTS -->
 <section class="section" id="projects">
   <div class="container">
     <h2 class="section-title">Your Projects</h2>
+
     {% if projects %}
       <div class="grid">
         {% for p in projects %}
           <article class="card item reveal" aria-labelledby="proj-{{ loop.index }}">
             <div class="head">
               <h3 id="proj-{{ loop.index }}" style="margin:0; font-weight:700">{{ p.name }}</h3>
+              <!-- Removed Manage/Upload; keep Logs button sized like ghost -->
               <a class="btn btn-ghost" href="{{ url_for('view_logs', project_name=p.name) }}">
-                <!-- terminal icon -->
+                <!-- terminal -->
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 17l4-4-4-4M12 19h8"/>
                 </svg>
@@ -51,8 +85,9 @@ header.hero{padding:6rem 0 4rem; position:relative; overflow:hidden}
               </a>
             </div>
 
-            <p style="color:var(--text-muted); margin:.25rem 0 .4rem">Public URL</p>
+            <p class="note" style="color:var(--text-muted); margin:.25rem 0 .4rem">Public URL</p>
             <a class="badge" href="/{{ p.name }}" target="_blank" rel="noopener">
+              <!-- link icon -->
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10.5 13.5 13.5 10.5m3-2A5.5 5.5 0 0 0 6 12m12 0a5.5 5.5 0 0 1-9 3.5"/></svg>
               <span>{{ request.host_url|trim('/') }}/{{ p.name }}</span>
             </a>
@@ -72,12 +107,133 @@ header.hero{padding:6rem 0 4rem; position:relative; overflow:hidden}
         {% endfor %}
       </div>
     {% else %}
-      <p style="color:var(--text-muted)">No projects yet. Create your first one!</p>
+      <p class="note" style="color:var(--text-muted)">No projects yet. Create your first one!</p>
     {% endif %}
   </div>
 </section>
 
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <h2 class="features-title reveal">Why you'll love Deploy X</h2>
+    <div class="features-scroller">
+      <div class="card feature-card reveal">
+        <div class="feature-icon">
+          <!-- lightning -->
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M13 2 3 14h7l-1 8 11-14h-7l0-6z"/></svg>
+        </div>
+        <h4>1-Click Deploy</h4>
+        <p>Point to a public GitHub repo and go.</p>
+      </div>
+
+      <div class="card feature-card reveal">
+        <div class="feature-icon">
+          <!-- folder -->
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M10 4l2 2h8a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h5z"/></svg>
+        </div>
+        <h4>Path-based Hosting</h4>
+        <p>Your app is served at <code>/project</code> with your own routes preserved.</p>
+      </div>
+
+      <div class="card feature-card reveal">
+        <div class="feature-icon">
+          <!-- lock -->
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M6 10V8a6 6 0 1 1 12 0v2h1a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9a1 1 0 0 1 1-1h1zm2 0h8V8a4 4 0 1 0-8 0v2z"/></svg>
+        </div>
+        <h4>Safe by Default</h4>
+        <p>Private projects; share only what you choose.</p>
+      </div>
+
+      <div class="card feature-card reveal">
+        <div class="feature-icon">
+          <!-- half-moon -->
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3 7.2 7.2 0 0 0 21 12.8z"/></svg>
+        </div>
+        <h4>Light/Dark</h4>
+        <p>Matches device theme or manual toggle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEVELOPER -->
+<section id="devs">
+  <div class="container">
+    <h2 class="features-title reveal">Meet the Developer</h2>
+    <div class="card reveal" style="display:flex; flex-direction:column; align-items:flex-start">
+      <div style="display:flex; align-items:center; gap:.85rem; margin-bottom:.75rem">
+        <img src="https://placehold.co/200x200?text=DX" alt="Deploy X" style="width:76px;height:76px;border-radius:50%;border:3px solid var(--border);object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,0.08)">
+        <div>
+          <div style="font-weight:700">Deploy X</div>
+          <div style="font-size:.92rem; color:var(--text-muted)">Lead Developer</div>
+        </div>
+      </div>
+      <p class="note">Focused on smooth, fast and scalable tooling with a crisp Android-like UI.</p>
+      <ul style="list-style:none; padding:0; margin:.5rem 0 0; width:100%; border-top:1px dashed var(--border); color:var(--text-muted)">
+        <li style="display:flex; gap:.4rem; align-items:center; padding:.45rem 0">
+          <!-- mail -->
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M2 6h20v12H2z"/><path d="M2 6l10 7 10-7" fill="#fff" opacity=".3"/></svg>
+          <a href="mailto:Fdar336@outlook.com">Fdar336@outlook.com</a>
+        </li>
+        <li style="display:flex; gap:.4rem; align-items:center; padding:.45rem 0">
+          <!-- github -->
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.2.8-.5v-1.8c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.4-1.3-5.4-5.9 0-1.3.5-2.4 1.2-3.3-.1-.3-.5-1.6.1-3.3 0 0 1-.3 3.4 1.2a11.6 11.6 0 0 1 6.2 0c2.4-1.5 3.4-1.2 3.4-1.2.6 1.7.2 3 .1 3.3.8.9 1.2 2 1.2 3.3 0 4.6-2.8 5.6-5.5 5.9.5.4.8 1.1.8 2.2v3.2c0 .3.2.6.8.5A12 12 0 0 0 12 .5z"/></svg>
+          <a href="#" target="_blank" rel="noopener">GitHub</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <h2 class="features-title reveal">FAQ</h2>
+    <div class="accordion reveal" id="faqAcc">
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <span>How do I deploy a site?</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="accordion-content">
+          <p>Click <strong>Create Project</strong> or <strong>Set Deploy</strong> and point to a public GitHub repo with a Flask app.</p>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <span>What URL will I get?</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="accordion-content">
+          <p>Your app lives at <code>{{ request.host_url|trim('/') }}/&lt;project&gt;</code>. Copy it from the badge.</p>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <span>Does it support live logs?</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="accordion-content">
+          <p>Yes—open the project’s <strong>Logs</strong> to see Render-style streaming logs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <script>
+// Accordion
+document.querySelectorAll('.accordion').forEach(acc=>{
+  acc.querySelectorAll('.accordion-item').forEach(item=>{
+    const header=item.querySelector('.accordion-header');
+    const content=item.querySelector('.accordion-content');
+    header.addEventListener('click',()=>{
+      const open=item.classList.contains('open');
+      acc.querySelectorAll('.accordion-item.open').forEach(o=>{o.classList.remove('open'); o.querySelector('.accordion-content').style.maxHeight=0;});
+      if(!open){ item.classList.add('open'); content.style.maxHeight=content.scrollHeight+'px'; }
+    });
+  });
+});
 // Reveal on scroll
 const io=new IntersectionObserver(es=>{es.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('show'); io.unobserve(e.target);} });},{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
