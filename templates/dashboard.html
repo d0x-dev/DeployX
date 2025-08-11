@@ -10,7 +10,10 @@
       <div class="card card-float">
         <div class="card-title">/{{ p.name }}</div>
         <div class="mono">PID {{ p.pid }} → :{{ p.port }}</div>
-        <a class="link" href="/{{ p.name }}" target="_blank">Open</a>
+        <div class="row">
+          <a class="btn" href="/{{ p.name }}" target="_blank">Open</a>
+          <a class="btn" href="{{ url_for('view_logs', project_name=p.name) }}">Logs</a>
+        </div>
       </div>
     {% endfor %}
   </div>
