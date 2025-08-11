@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="title">Live logs — <span class="mono">/{{ project_name }}</span></h1>
+<div class="card">
+  <div class="row" style="justify-content:space-between; margin-bottom:10px;">
+    <span class="badge"><span id="dot" class="dot gray"></span><span id="statusText">starting…</span></span>
+    <div class="row">
+      <a class="btn" id="openApp" href="/{{ project_name }}" target="_blank">Open app</a>
+      <button class="btn" id="copyBtn" type="button">Copy logs</button>
+    </div>
+  </div>
+  <pre id="out" class="logpane"></pre>
+  <div class="row" style="margin-top:10px;">
+    <a class="btn" href="{{ url_for('projects') }}">Back to projects</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  const out = document.getElementById('out');
+  const dot = document.getElementById('dot');
+  const stx = document.getElementById('statusText');
+  const copyBtn = document.getElementById('copyBtn');
+  const project = "{{ project_name }}";
+  const es = new EventSource("{{ url_for('logs_stream', project_name=project_name) }}");
+
+  function setStatus(s){
+    stx.textContent = s;
+    dot.classList.remove('gray','amber','green');
+    if (s === 'running') dot.classList.add('green');
+    else if (s === 'starting') dot.classList.add('amber');
+    else dot.classList.add('gray');
+  }
+
+  function append(line){
+    out.textContent += line + "\\n";
+    out.scrollTop = out.scrollHeight;
+  }
+
+  es.onmessage = (e) => append(e.data);
+  es.addEventListener('status', (e) => setStatus(e.data || '?'));
+  es.onerror = () => setStatus('error');
+
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(out.textContent);
+      copyBtn.textContent = "Copied!";
+      setTimeout(()=>copyBtn.textContent="Copy logs", 1200);
+    } catch (e) {
+      alert('Copy failed: ' + e);
+    }
+  });
+
+  // initial state
+  setStatus('starting');
+})();
+</script>
+{% endblock %}
