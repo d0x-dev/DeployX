@@ -9,6 +9,7 @@
         <div class="mono">PID {{ p.pid }} → :{{ p.port }}</div>
         <div class="row">
           <a class="btn" href="/{{ p.name }}" target="_blank">Open</a>
+          <a class="btn" href="{{ url_for('view_logs', project_name=p.name) }}">Logs</a>
           <form method="post" action="{{ url_for('stop_project', project_name=p.name) }}" onsubmit="return confirm('Stop and remove this project?')">
             <button class="btn danger" type="submit">Stop</button>
           </form>
