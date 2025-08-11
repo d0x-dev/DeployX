@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini PaaS</title>
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='style.css') }}">
+  <script defer src="{{ url_for('static_files', filename='app.js') }}"></script>
+</head>
+<body>
+  <div class="bg"></div>
+  <nav class="nav">
+    <a href="/" class="brand">⚡ Mini PaaS</a>
+    <div class="spacer"></div>
+    {% if session.get('user') %}
+      <a href="{{ url_for('deploy') }}">Deploy</a>
+      <a href="{{ url_for('projects') }}">Projects</a>
+      <span class="user">@{{ session.get('user') }}</span>
+      <a class="btn" href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+      <a class="btn" href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+  </nav>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for category, msg in messages %}
+            <div class="flash {{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">Built for demos — path based hosting at <code>/&lt;project&gt;</code></footer>
+</body>
+</html>
