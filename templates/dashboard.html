@@ -3,38 +3,183 @@
 {% block content %}
 
 <style>
+/* Global vars */
+:root {
+  --deploy-btn-bg: #2563eb; /* blue-600 */
+  --deploy-btn-bg-hover: #1d4ed8; /* darker blue */
+  --deploy-btn-text: #fff;
+}
+
+html[data-theme="dark"] {
+  --deploy-btn-bg: #3b82f6; /* lighter blue in dark mode */
+  --deploy-btn-bg-hover: #2563eb;
+  --deploy-btn-text: #fff;
+}
+
 /* Hero */
-header.hero{padding:6rem 0 4rem; position:relative; overflow:hidden}
-.hero-wrap{text-align:center; position:relative; z-index:1}
-.hero-sub{max-width:660px; margin:0 auto 1.8rem; color:var(--text-muted); font-size:1.05rem}
-.btns{display:flex; justify-content:center; align-items:center; gap:.75rem; flex-wrap:wrap; margin-bottom:1.2rem}
+header.hero {
+  padding: 6rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-wrap {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.hero-sub {
+  max-width: 660px;
+  margin: 0 auto 1.8rem;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
 
-/* Projects */
-.section{padding: var(--section) 0}
-.section-title{text-align:left; font-weight:800; font-size:1.35rem; margin:0 0 1.2rem}
-.grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:1rem}
-.item .head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:.6rem}
-.badge{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; background:var(--surface); border:1px solid var(--border); font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--text); text-decoration:none; word-break:break-all}
-.badge svg{width:16px;height:16px}
+/* Deploy!! Button */
+.deploy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--deploy-btn-bg);
+  color: var(--deploy-btn-text);
+  padding: 0.95rem 2rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 14px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  transition: background 0.25s, transform 0.25s;
+  animation: pulse 2.2s infinite ease-in-out;
+}
+.deploy-btn svg {
+  width: 20px;
+  height: 20px;
+}
+.deploy-btn:hover {
+  background: var(--deploy-btn-bg-hover);
+  transform: translateY(-2px);
+  animation: pulseHover 1.6s infinite ease-in-out;
+}
 
-/* Features */
-.features-title{text-align:center; font-weight:800; font-size:2rem; margin-bottom:2rem}
-.features-scroller{display:grid; grid-auto-flow:column; grid-auto-columns:85%; gap:1rem; overflow-x:auto; padding:.5rem .25rem 1.25rem; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch}
-.feature-card{scroll-snap-align:center; min-height:230px}
-.feature-icon{width:52px;height:52px;border-radius:14px; background:rgba(0,0,0,.06); display:inline-flex; align-items:center; justify-content:center; margin-bottom:.8rem}
-html[data-theme="dark"] .feature-icon{background:rgba(255,255,255,.06)}
-@media(min-width:900px){ .features-scroller{grid-auto-columns:calc(25% - .75rem)} }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(37,99,235,0.6); }
+  50% { box-shadow: 0 0 0 14px rgba(37,99,235,0); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+}
+@keyframes pulseHover {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
+  50% { box-shadow: 0 0 0 14px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+
+/* Sections */
+.section { padding: var(--section) 0 }
+.section-title {
+  text-align: left;
+  font-weight: 800;
+  font-size: 1.35rem;
+  margin: 0 0 1.2rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+  gap: 1rem;
+}
+.item .head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: .6rem;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-family: ui-monospace,Menlo,Consolas,monospace;
+  color: var(--text);
+  text-decoration: none;
+  word-break: break-all;
+}
+.badge svg { width: 16px; height: 16px; }
+
+/* Features scroller */
+.features-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+.features-scroller {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 85%;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: .5rem .25rem 1.25rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.feature-card { scroll-snap-align: center; min-height: 230px; }
+.feature-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.06);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: .8rem;
+}
+html[data-theme="dark"] .feature-icon {
+  background: rgba(255,255,255,.06);
+}
+@media(min-width:900px){
+  .features-scroller { grid-auto-columns: calc(25% - .75rem); }
+}
 
 /* Accordion */
-.accordion{border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); background:var(--surface); box-shadow:var(--shadow)}
-.accordion-item + .accordion-item{border-top:1px solid var(--border)}
-.accordion-header{cursor:pointer; padding:1rem 1.2rem; display:flex; align-items:center; justify-content:space-between; font-weight:600; user-select:none}
-.accordion-content{max-height:0; overflow:hidden; transition:max-height .3s cubic-bezier(.4,0,.2,1); padding:0 1.2rem}
-.accordion-item.open .accordion-content{padding:0 1.2rem 1rem}
+.accordion {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.accordion-item + .accordion-item { border-top: 1px solid var(--border); }
+.accordion-header {
+  cursor: pointer;
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  user-select: none;
+}
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s cubic-bezier(.4,0,.2,1);
+  padding: 0 1.2rem;
+}
+.accordion-item.open .accordion-content {
+  padding: 0 1.2rem 1rem;
+}
 
-/* Reveal */
-.reveal{opacity:0; transform:translateY(16px); transition: all .55s cubic-bezier(.2,.8,.2,1)}
-.reveal.show{opacity:1; transform:translateY(0)}
+/* Reveal animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: all .55s cubic-bezier(.2,.8,.2,1);
+}
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>
 
 <!-- HERO -->
@@ -43,58 +188,49 @@ html[data-theme="dark"] .feature-icon{background:rgba(255,255,255,.06)}
     <h1 class="hero-title" style="margin:0 0 .6rem; font-weight:800; font-size:clamp(2rem,3vw,3rem)">Deploy X</h1>
     <p class="hero-sub">Deploy your Python/Flask apps from GitHub in seconds. Clean URLs, live logs, and simple management.</p>
 
-    <div class="btns">
-      <a href="{{ url_for('deploy') }}" class="btn" style="padding:1rem 2rem; font-size:1.05rem;">
-        <!-- rocket icon -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
-          <path d="M4 13l1.5 1.5L7 13l-1.5-1.5L4 13zm8-8l1.5 1.5L13 5l-1.5-1.5L12 5zm4 4l1.5 1.5L17 9l-1.5-1.5L16 9zM4 20v-5l5-5 4 4-5 5H4zm6.5-6.5L20 4l-2.5-2.5L8 11.5l2.5 2.5z"/>
-        </svg>
-        Deploy!!
-      </a>
+    <a href="{{ url_for('deploy') }}" class="deploy-btn">
+      <!-- rocket icon -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 15a1 1 0 0 0 0 4h2a1 1 0 0 0 1-1v-1h8v1a1 1 0 0 0 1 1h2a1 1 0 0 0 0-4h-1.586l2.293-2.293a1 1 0 0 0-1.414-1.414L16 13.586V12a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v1.586l-2.293-2.293a1 1 0 0 0-1.414 1.414L6.586 15H5z"/>
+      </svg>
+      Deploy!!
+    </a>
+
+    <div class="note" style="color:var(--text-muted);font-size:.85rem;margin-top:1rem;">
+      Signed in as <strong>{{ session.get('user') }}</strong>
     </div>
-    <div class="note" style="color:var(--text-muted);font-size:.85rem">Signed in as <strong>{{ session.get('user') }}</strong></div>
   </div>
 </header>
 
-<!-- PROJECTS -->
+<!-- PROJECTS SECTION -->
 <section class="section" id="projects">
   <div class="container">
     <h2 class="section-title">Your Projects</h2>
-
     {% if projects %}
-      <div class="grid">
-        {% for p in projects %}
-          <article class="card item reveal">
-            <div class="head">
-              <h3 style="margin:0; font-weight:700">{{ p.name }}</h3>
-              <a class="btn btn-ghost" href="{{ url_for('view_logs', project_name=p.name) }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 17l4-4-4-4M12 19h8"/>
-                </svg>
-                Logs
-              </a>
-            </div>
-            <p style="color:var(--text-muted); margin:.25rem 0 .4rem">Public URL</p>
-            <a class="badge" href="/{{ p.name }}" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10.5 13.5 13.5 10.5m3-2A5.5 5.5 0 0 0 6 12m12 0a5.5 5.5 0 0 1-9 3.5"/></svg>
-              <span>{{ request.host_url|trim('/') }}/{{ p.name }}</span>
-            </a>
-            <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-top:.8rem">
-              <button class="btn btn-ghost" type="button"
-                onclick="navigator.clipboard.writeText('{{ request.host_url|trim('/') }}/{{ p.name }}'); this.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.7&quot;><path d=&quot;M5 13l4 4L19 7&quot;/></svg> Copied!'; setTimeout(()=>this.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.7&quot;><path d=&quot;M8 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm0 0V5a2 2 0 0 1 2-2h6&quot;/></svg> Copy URL',1100);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm0 0V5a2 2 0 0 1 2-2h6"/></svg>
-                Copy URL
-              </button>
-              <a class="btn btn-ghost" href="/{{ p.name }}" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 5h5v5M10 14 19 5M19 13v5a1 1 0 0 1-1 1h-5"/></svg>
-                Open
-              </a>
-            </div>
-          </article>
-        {% endfor %}
-      </div>
+    <div class="grid">
+      {% for p in projects %}
+      <article class="card item reveal" aria-labelledby="proj-{{ loop.index }}">
+        <div class="head">
+          <h3 id="proj-{{ loop.index }}" style="margin:0; font-weight:700">{{ p.name }}</h3>
+          <a class="btn btn-ghost" href="{{ url_for('view_logs', project_name=p.name) }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path d="M4 17l4-4-4-4M12 19h8"/>
+            </svg>
+            Logs
+          </a>
+        </div>
+        <p class="note" style="color:var(--text-muted); margin:.25rem 0 .4rem">Public URL</p>
+        <a class="badge" href="/{{ p.name }}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M10.5 13.5 13.5 10.5m3-2A5.5 5.5 0 0 0 6 12m12 0a5.5 5.5 0 0 1-9 3.5"/>
+          </svg>
+          <span>{{ request.host_url|trim('/') }}/{{ p.name }}</span>
+        </a>
+      </article>
+      {% endfor %}
+    </div>
     {% else %}
-      <p style="color:var(--text-muted)">No projects yet. Create your first one!</p>
+    <p class="note" style="color:var(--text-muted)">No projects yet. Create your first one!</p>
     {% endif %}
   </div>
 </section>
@@ -105,19 +241,22 @@ html[data-theme="dark"] .feature-icon{background:rgba(255,255,255,.06)}
     <h2 class="features-title reveal">Why you'll love Deploy X</h2>
     <div class="features-scroller">
       <div class="card feature-card reveal">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M13 2 3 14h7l-1 8 11-14h-7l0-6z"/></svg></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+            <path d="M13 2 3 14h7l-1 8 11-14h-7z"/>
+          </svg>
+        </div>
         <h4>1-Click Deploy</h4>
         <p>Point to a public GitHub repo and go.</p>
       </div>
       <div class="card feature-card reveal">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M10 4l2 2h8a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h5z"/></svg></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+            <path d="M10 4l2 2h8a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h5z"/>
+          </svg>
+        </div>
         <h4>Path-based Hosting</h4>
         <p>Your app is served at <code>/project</code> with your own routes preserved.</p>
-      </div>
-      <div class="card feature-card reveal">
-        <div class="feature-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M6 10V8a6 6 0 1 1 12 0v2h1a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9a1 1 0 0 1 1-1h1zm2 0h8V8a4 4 0 1 0-8 0v2z"/></svg></div>
-        <h4>Safe by Default</h4>
-        <p>Private projects; share only what you choose.</p>
       </div>
     </div>
   </div>
@@ -129,19 +268,33 @@ html[data-theme="dark"] .feature-icon{background:rgba(255,255,255,.06)}
     <h2 class="features-title reveal">Meet the Developer</h2>
     <div class="card reveal" style="display:flex; flex-direction:column; align-items:flex-start">
       <div style="display:flex; align-items:center; gap:.85rem; margin-bottom:.75rem">
-        <img src="https://placehold.co/200x200?text=DX" alt="Deploy X" style="width:76px;height:76px;border-radius:50%;border:3px solid var(--border);object-fit:cover;">
+        <img src="https://placehold.co/200x200?text=DB" alt="Darkboy" style="width:76px;height:76px;border-radius:50%;border:3px solid var(--border);object-fit:cover;">
         <div>
           <div style="font-weight:700">Darkboy</div>
           <div style="font-size:.92rem; color:var(--text-muted)">Lead Developer</div>
         </div>
       </div>
-      <p>Focused on smooth, fast and scalable tooling with a crisp Android-like UI.</p>
-      <ul style="list-style:none; padding:0; margin:.5rem 0 0; width:100%; border-top:1px dashed var(--border); color:var(--text-muted)">
-        <li style="display:flex; gap:.4rem; align-items:center; padding:.45rem 0">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M2 6h20v12H2z"/><path d="M2 6l10 7 10-7" fill="#fff" opacity=".3"/></svg>
-          <a href="mailto:Fdar336@outlook.com">Fdar336@outlook.com</a>
-        </li>
-      </ul>
+      <p class="note">Focused on smooth, fast and scalable tooling with a crisp UI.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <h2 class="features-title reveal">FAQ</h2>
+    <div class="accordion reveal" id="faqAcc">
+      <div class="accordion-item">
+        <div class="accordion-header">
+          <span>How do I deploy a site?</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </div>
+        <div class="accordion-content">
+          <p>Click <strong>Deploy!!</strong> and point to a public GitHub repo with a Flask app.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -154,13 +307,21 @@ document.querySelectorAll('.accordion').forEach(acc=>{
     const content=item.querySelector('.accordion-content');
     header.addEventListener('click',()=>{
       const open=item.classList.contains('open');
-      acc.querySelectorAll('.accordion-item.open').forEach(o=>{o.classList.remove('open'); o.querySelector('.accordion-content').style.maxHeight=0;});
+      acc.querySelectorAll('.accordion-item.open').forEach(o=>{
+        o.classList.remove('open'); o.querySelector('.accordion-content').style.maxHeight=0;
+      });
       if(!open){ item.classList.add('open'); content.style.maxHeight=content.scrollHeight+'px'; }
     });
   });
 });
+
 // Reveal on scroll
-const io=new IntersectionObserver(es=>{es.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('show'); io.unobserve(e.target);} });},{threshold:.12});
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('show'); io.unobserve(e.target);}
+  });
+},{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
+
 {% endblock %}
