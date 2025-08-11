@@ -214,11 +214,27 @@ def start_pipeline(owner, project, repo_url, build_cmd, run_cmd):
 
             # Run
             env = os.environ.copy()
+
+# IMPORTANT: strip Werkzeug/Flask dev-server vars so child Flask doesn't try to re-use our socket FD
+            for k in ("WERKZEUG_RUN_MAIN", "WERKZEUG_SERVER_FD", "FLASK_RUN_FROM_CLI"):
+                env.pop(k, None)
+
             env["HOST"] = "0.0.0.0"
+            # Keep Render's $PORT if present (lets child bind to 10000), otherwise fall back to 5000/8000 scan
             env.setdefault("PORT", str(ALLOWED_PORTS[0]))
+            # Make logs stream immediately
+            env["PYTHONUNBUFFERED"] = "1"
+
             log(f"Starting app: {run_cmd} (PORT={env['PORT']})")
-            proc = subprocess.Popen(run_cmd, cwd=str(proj_dir), shell=True,
-                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env)
+            proc = subprocess.Popen(
+                run_cmd,
+                cwd=str(proj_dir),
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                env=env,
+            )
+
             STATE[key]["proc"] = proc
             t_run = threading.Thread(target=enqueue_output, args=(proc.stdout, log_q, "run"), daemon=True)
             t_run.start()
