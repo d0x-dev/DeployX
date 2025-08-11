@@ -1,23 +1,85 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Dashboard — WebDeploy{% endblock %}
 {% block content %}
-<h1 class="title">Dashboard</h1>
-<a class="btn" href="{{ url_for('deploy') }}">➕ Deploy a project</a>
+<style>
+header.hero{padding:6rem 0 4rem; position:relative; overflow:hidden}
+.hero-wrap{text-align:center; position:relative; z-index:1}
+.hero-sub{max-width:660px; margin:0 auto 1.8rem; color:var(--text-muted); font-size:1.05rem}
+.btns{display:flex; justify-content:center; align-items:center; gap:.75rem; flex-wrap:wrap; margin-bottom:1.2rem}
+.section{padding: var(--section) 0}
+.section-title{font-weight:800; font-size:1.35rem; margin:0 0 1.2rem}
+.grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:1rem}
+.item .head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:.6rem}
+.reveal{opacity:0; transform:translateY(16px); transition: all .55s cubic-bezier(.2,.8,.2,1)}
+.reveal.show{opacity:1; transform:translateY(0)}
+</style>
 
-{% if projects %}
-  <h2 class="subtitle">Your projects</h2>
-  <div class="grid">
-    {% for p in projects %}
-      <div class="card card-float">
-        <div class="card-title">/{{ p.name }}</div>
-        <div class="mono">PID {{ p.pid }} → :{{ p.port }}</div>
-        <div class="row">
-          <a class="btn" href="/{{ p.name }}" target="_blank">Open</a>
-          <a class="btn" href="{{ url_for('view_logs', project_name=p.name) }}">Logs</a>
-        </div>
-      </div>
-    {% endfor %}
+<header class="hero">
+  <div class="container hero-wrap">
+    <h1 style="margin:0 0 .6rem; font-weight:800; font-size:clamp(2rem,3vw,3rem)">WebDeploy</h1>
+    <p class="hero-sub">Deploy your Python web apps from GitHub, get a clean URL, and watch live logs.</p>
+
+    <div class="btns">
+      <a href="{{ url_for('deploy') }}" class="btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        New Project
+      </a>
+      <a href="{{ url_for('projects') }}" class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4-4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        Manage / Upload
+      </a>
+    </div>
+    <div style="color:var(--text-muted);font-size:.85rem">Signed in as <strong>{{ session.get('user') }}</strong></div>
   </div>
-{% else %}
-  <p class="muted">No projects yet. Deploy your first one!</p>
-{% endif %}
+</header>
+
+<section class="section" id="projects">
+  <div class="container">
+    <h2 class="section-title">Your Projects</h2>
+    {% if projects %}
+      <div class="grid">
+        {% for p in projects %}
+          <article class="card item reveal" aria-labelledby="proj-{{ loop.index }}">
+            <div class="head">
+              <h3 id="proj-{{ loop.index }}" style="margin:0; font-weight:700">{{ p.name }}</h3>
+              <a class="btn btn-ghost" href="{{ url_for('view_logs', project_name=p.name) }}">
+                <!-- terminal icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 17l4-4-4-4M12 19h8"/>
+                </svg>
+                Logs
+              </a>
+            </div>
+
+            <p style="color:var(--text-muted); margin:.25rem 0 .4rem">Public URL</p>
+            <a class="badge" href="/{{ p.name }}" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10.5 13.5 13.5 10.5m3-2A5.5 5.5 0 0 0 6 12m12 0a5.5 5.5 0 0 1-9 3.5"/></svg>
+              <span>{{ request.host_url|trim('/') }}/{{ p.name }}</span>
+            </a>
+
+            <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-top:.8rem">
+              <button class="btn btn-ghost" type="button"
+                onclick="navigator.clipboard && navigator.clipboard.writeText('{{ request.host_url|trim('/') }}/{{ p.name }}'); this.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.7&quot;><path d=&quot;M5 13l4 4L19 7&quot;/></svg> Copied!'; setTimeout(()=>this.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.7&quot;><path d=&quot;M8 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm0 0V5a2 2 0 0 1 2-2h6&quot;/></svg> Copy URL',1100);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm0 0V5a2 2 0 0 1 2-2h6"/></svg>
+                Copy URL
+              </button>
+              <a class="btn btn-ghost" href="/{{ p.name }}" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 5h5v5M10 14 19 5M19 13v5a1 1 0 0 1-1 1h-5"/></svg>
+                Open
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="color:var(--text-muted)">No projects yet. Create your first one!</p>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+// Reveal on scroll
+const io=new IntersectionObserver(es=>{es.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('show'); io.unobserve(e.target);} });},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 {% endblock %}
