@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="title">Deploy from GitHub</h1>
+<form method="post" class="card">
+  <label>Project name <input name="project_name" placeholder="dark" required></label>
+  <label>Public GitHub URL <input name="repo_url" placeholder="https://github.com/user/repo" required></label>
+  <label>Build command <input name="build_cmd" value="pip install -r requirements.txt"></label>
+  <label>Run command <input name="run_cmd" value="python3 app.py"></label>
+  <p class="muted">Your app must bind to <code>0.0.0.0</code> and listen on port <code>5000</code> or <code>8000</code>.</p>
+  <button class="btn" type="submit">Deploy</button>
+</form>
+{% endblock %}
