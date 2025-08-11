@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes">
-  <title>{% block title %}WebDeploy{% endblock %}</title>
+  <title>{% block title %}Deploy X{% endblock %}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
   .page{min-height:calc(100dvh - 64px); padding:var(--section) 0}
   @media (max-width:768px){ :root{--section:3rem}; .page{padding:2.5rem 0} }
 
-  /* Blobs */
+  /* 24/7 perpetual animated blobs */
   .blobs{position:fixed; inset:0; pointer-events:none; z-index:-1; overflow:hidden}
   .blob{position:absolute; border-radius:50%; filter:blur(80px); opacity:.35; animation:float 14s infinite alternate ease-in-out}
   .blob.one{width:380px;height:380px; top:-100px; left:-120px; background:#ff6b6b; animation-delay:0s}
@@ -124,7 +124,7 @@
 </head>
 <body>
 
-  <!-- Blurred blobs -->
+  <!-- 24/7 animated blobs -->
   <div class="blobs" aria-hidden="true">
     <div class="blob one"></div>
     <div class="blob two"></div>
@@ -133,7 +133,7 @@
 
   <!-- Header -->
   <header class="appbar">
-    <a class="brand" href="{{ url_for('dashboard') }}">WebDeploy</a>
+    <a class="brand" href="{{ url_for('dashboard') }}">Deploy X</a>
 
     <nav class="nav" aria-label="Primary">
       {% if session.get('user') %}
