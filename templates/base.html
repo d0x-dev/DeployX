@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ title or "Mini PaaS" }}</title>
+  <title>{{ title or "DEPLOY X " }}</title>
   <style>
     :root { --bg1:#0f1020; --bg2:#12122a; --fg:#eaf1ff; --acc:#6cf; --acc2:#f0f; --muted:#a9b3c9; }
     *{box-sizing:border-box}
@@ -57,7 +57,7 @@
 <body>
   <div class="bg"></div>
   <nav class="nav">
-    <a href="{{ url_for('dashboard') }}" class="brand">⚡ Mini PaaS</a>
+    <a href="{{ url_for('dashboard') }}" class="brand">⚡ DEPLOY X </a>
     <div class="spacer"></div>
     {% if session.get('user') %}
       <a href="{{ url_for('deploy') }}">Deploy</a>
