@@ -107,11 +107,17 @@
 
   /* Flash */
   .flash-wrap{display:grid; gap:8px; margin:1rem 0}
-  .flash{padding:.85rem 1rem; border-radius:12px; border:1px solid var(--border)}
-  .flash.success{background:#e9fce9}
-  .flash.danger{background:#ffe9ee}
-  .flash.warning{background:#fff6e6}
-  .flash.info{background:#e8f4ff}
+  .flash{padding:.85rem 1rem; border-radius:12px; border:1px solid var(--border); opacity:1; transition:opacity .6s ease}
+  /* Light theme */
+  html[data-theme="light"] .flash.success{background:#e9fce9}
+  html[data-theme="light"] .flash.danger{background:#ffe9ee}
+  html[data-theme="light"] .flash.warning{background:#fff6e6}
+  html[data-theme="light"] .flash.info{background:#e8f4ff}
+  /* Dark theme */
+  html[data-theme="dark"] .flash.success{background:#002a15; border-color:#27d07a55; color:#fff}
+  html[data-theme="dark"] .flash.danger{background:#1a0000; border-color:#ff4b6e55; color:#fff}
+  html[data-theme="dark"] .flash.warning{background:#2a2500; border-color:#e7d43a55; color:#fff}
+  html[data-theme="dark"] .flash.info{background:#001a2a; border-color:#6cc9ff55; color:#fff}
 
   /* Logs */
   .logpane{background:#0b0f14; color:#e7ecf3; border:1px solid #243; padding:12px; height:60vh; overflow:auto; border-radius:12px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px}
@@ -219,6 +225,17 @@
     const close=()=>{drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); hamb.setAttribute('aria-expanded','false');};
     hamb.addEventListener('click',open,{passive:true}); scrim.addEventListener('click',close,{passive:true});
     window.addEventListener('keydown',e=>{if(e.key==='Escape') close();},{passive:true});
+  })();
+
+  // Auto-fade flash messages
+  (function(){
+    const flashes = document.querySelectorAll('.flash');
+    setTimeout(()=>{
+      flashes.forEach(f=>{
+        f.style.opacity = '0';
+        setTimeout(()=>f.remove(), 600); // wait for fade-out
+      });
+    }, 4000); // 4s delay
   })();
   </script>
 </body>
