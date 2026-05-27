@@ -362,4 +362,4 @@ def proxy_path(project_name, subpath=""):
 if __name__ == "__main__":
     load_json(USERS_JSON, {})
     load_json(PROJECTS_JSON, {})
-    app.run(host="0.0.0.0", port=3000, debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=True)
